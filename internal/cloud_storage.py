@@ -19,7 +19,7 @@ class ImageKitCloudStorage(BaseCloudStorage, Singleton):
             environ["IMAGEKIT_URL_ENDPOINT"]
         )
 
-    async def upload_file(self, path: str, file: bytes | BinaryIO, file_name: str) -> str:
+    async def upload_file(self, path: str, file: bytes | BinaryIO, file_name: str) -> dict[str, str]:
         file = file if isinstance(file, bytes) else file.read()
         base64 = b64encode(file)  # imagekit doesn't work with bytes except base64
         upload_options = UploadFileRequestOptions(
@@ -31,4 +31,8 @@ class ImageKitCloudStorage(BaseCloudStorage, Singleton):
             None,
             partial(self.image_kit.upload_file, base64, file_name, upload_options)
         )
-        return result.url
+
+        return {"url": result.url, "file_id": result.file_id}
+
+    async def delete_file(self, file_id: str):
+        self.image_kit.delete_file(file_id)

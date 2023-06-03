@@ -1,2 +1,2 @@
-
-from .user import *
+from .teacher import Teacher
+from .user import User

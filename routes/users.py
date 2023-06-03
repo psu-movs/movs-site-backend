@@ -1,6 +1,6 @@
 from typing import Annotated
 
-from fastapi import APIRouter, HTTPException, status, Form, Response, Depends, Request
+from fastapi import APIRouter, HTTPException, status, Form, Depends
 from fastapi.security import OAuth2PasswordRequestForm
 
 from internal import auth, error
@@ -40,7 +40,7 @@ async def authorize_user(
 
 @router.get("/users/me")
 async def get_current_user(user: Annotated[User, Depends(auth.get_current_user)]):
-    return user
+    return user.dict(exclude={"id", "password"})
 
 
 @router.post("/users")

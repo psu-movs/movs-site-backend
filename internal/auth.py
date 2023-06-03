@@ -42,5 +42,5 @@ async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]) -> Use
     if not user:
         raise
 
-    return user.dict(exclude={"id", "password"})
+    return user
 
