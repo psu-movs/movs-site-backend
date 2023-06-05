@@ -91,8 +91,8 @@ async def update_teacher(
             photo.file,
             str(teacher.id)
         )
-        teacher.photo_url = result["photo_url"]
-        teacher.photo_file_id = result["photo_file_id"]
+        teacher.photo_url = result["url"]
+        teacher.photo_file_id = result["file_id"]
 
     await teacher.save()
 
