@@ -17,7 +17,13 @@ router = APIRouter(prefix=API_PREFIX)
 
 @router.get("/news")
 async def get_news() -> list[Article]:
-    return await Article.find_all().to_list()
+    articles = await Article.find_all().to_list()
+    return [article.dict(exclude={"description"}) for article in articles]
+
+
+@router.get("/news/{article_id}")
+async def get_article(article_id: str):
+    return await Article.get(article_id)
 
 
 @router.post("/news")
