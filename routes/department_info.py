@@ -83,6 +83,8 @@ async def add_department_head(
     data = {k: v for k, v in locals().items() if k not in {"photo", "user"} and v is not None}
     head = DepartmentHead(**data)
 
+    await head.create()
+
     result = await ImageKitCloudStorage().upload_file(
         f"/department_head",
         photo.file,
@@ -91,7 +93,7 @@ async def add_department_head(
     head.photo_url = result["url"]
     head.photo_file_id = result["file_id"]
 
-    await head.create()
+    await head.save()
 
     return head
 
