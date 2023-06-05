@@ -35,4 +35,8 @@ class ImageKitCloudStorage(BaseCloudStorage, Singleton):
         return {"url": result.url, "file_id": result.file_id}
 
     async def delete_file(self, file_id: str):
-        self.image_kit.delete_file(file_id)
+        loop = get_event_loop()
+        await loop.run_in_executor(
+            None,
+            partial(self.image_kit.delete_file, file_id)
+        )
