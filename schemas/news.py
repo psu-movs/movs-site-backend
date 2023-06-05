@@ -9,3 +9,6 @@ class Article(Document):
     thumbnail_url: str | None = None
     thumbnail_file_id: str | None = None
 
+    class Settings:
+        name = "articles"
+
