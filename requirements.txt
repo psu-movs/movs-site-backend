@@ -1,3 +1,4 @@
+urllib3~=1.26.15
 fastapi~=0.95.0
 python-dotenv~=1.0.0
 pydantic~=1.10.6
@@ -9,5 +10,3 @@ python-jose
 cryptography
 beanie
 motor
-urllib3~=1.26.15
-requests-toolbelt~=0.10.1
