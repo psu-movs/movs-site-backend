@@ -25,9 +25,25 @@ class DepartmentInfoDoesNotExists(HTTPException):
         )
 
 
+class DepartmentInfoAlreadyExists(HTTPException):
+    def __init__(self):
+        super().__init__(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Information about department already added. You can only update it"
+        )
+
+
 class DepartmentHeadDoesNotExists(HTTPException):
     def __init__(self):
         super().__init__(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="There are no information about department head. Please, add it."
+        )
+
+
+class DepartmentHeadAlreadyExists(HTTPException):
+    def __init__(self):
+        super().__init__(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Information about department head already added. You can only update it"
         )

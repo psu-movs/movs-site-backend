@@ -5,7 +5,9 @@ from fastapi import APIRouter, Depends, Form, UploadFile
 from config import API_PREFIX
 from internal import auth
 from internal.cloud_storage import ImageKitCloudStorage
-from internal.error import MissingPermissions, DepartmentInfoDoesNotExists, DepartmentHeadDoesNotExists
+from internal.error import DepartmentHeadAlreadyExists, DepartmentInfoAlreadyExists, MissingPermissions, \
+    DepartmentInfoDoesNotExists, \
+    DepartmentHeadDoesNotExists
 from internal.flags import Permissions
 from schemas import DepartmentInfo, User
 from schemas.department_info import DepartmentHead, PartialDepartmentInfo
@@ -28,6 +30,9 @@ async def set_department_info(
 ) -> DepartmentInfo:
     if not user.has_permissions(Permissions.MANAGE_INFO):
         raise MissingPermissions()
+
+    if (await DepartmentInfo.find_one()) is not None:
+        raise DepartmentInfoAlreadyExists()
 
     await department.create()
     return department
@@ -79,6 +84,9 @@ async def add_department_head(
 ) -> DepartmentHead:
     if not user.has_permissions(Permissions.MANAGE_INFO):
         raise MissingPermissions()
+
+    if (await DepartmentHead.find_one()) is not None:
+        raise DepartmentHeadAlreadyExists()
 
     data = {k: v for k, v in locals().items() if k not in {"photo", "user"} and v is not None}
     head = DepartmentHead(**data)
