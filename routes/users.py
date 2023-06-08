@@ -44,16 +44,16 @@ async def get_current_user(user: Annotated[User, Depends(auth.get_current_user)]
 
 
 @router.post("/users")
-async def register(full_name: Annotated[str, Form()], email: Annotated[str, Form()], password: Annotated[str, Form()]):
+async def register(username: Annotated[str, Form()], email: Annotated[str, Form()], password: Annotated[str, Form()]):
     email_user = await User.find_one(User.email == email)
-    name_user = await User.find_one(User.full_name == full_name)
+    name_user = await User.find_one(User.username == username)
     if email_user:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Пользователь с такой почтой уже есть")
     if name_user:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Пользователь с таким именем уже есть")
 
     hashed_password = auth.hash_value(password)
-    user = User(full_name=full_name, email=email, password=hashed_password, permissions=Permissions.NONE)
+    user = User(username=username, email=email, password=hashed_password, permissions=Permissions.NONE)
     await user.insert()
 
     return {

@@ -4,7 +4,7 @@ from internal.flags import Permissions
 
 
 class User(Document):
-    full_name: str
+    username: str
     password: str
     email: str
     permissions: Permissions
