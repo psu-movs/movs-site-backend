@@ -8,9 +8,11 @@ from motor.motor_asyncio import AsyncIOMotorClient
 from schemas import User, Teacher, DepartmentHead, DepartmentInfo, Article
 from routes import users, teachers, department_info, news
 
-load_dotenv() # noqa
+load_dotenv()
 
-app = FastAPI()
+app = FastAPI(
+    title="КафедраМОВС",
+)
 app.include_router(users.router)
 app.include_router(teachers.router)
 app.include_router(department_info.router)
