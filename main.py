@@ -6,7 +6,7 @@ from fastapi import FastAPI
 from motor.motor_asyncio import AsyncIOMotorClient
 
 from schemas import User, Teacher, DepartmentHead, DepartmentInfo, Article
-from routes import users, teachers, department_info
+from routes import users, teachers, department_info, news
 
 load_dotenv() # noqa
 
@@ -14,6 +14,7 @@ app = FastAPI()
 app.include_router(users.router)
 app.include_router(teachers.router)
 app.include_router(department_info.router)
+app.include_router(news.router)
 
 
 @app.on_event("startup")
