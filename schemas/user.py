@@ -1,6 +1,13 @@
 from beanie import Document
+from pydantic import BaseModel
 
 from internal.flags import Permissions
+
+
+class PartialUser(BaseModel):
+    username: str
+    email: str
+    permissions: Permissions
 
 
 class User(Document):

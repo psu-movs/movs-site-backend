@@ -7,7 +7,7 @@ from internal import auth, error
 from config import API_PREFIX
 from internal.flags import Permissions
 
-from schemas.user import User
+from schemas.user import User, PartialUser
 router = APIRouter(prefix=API_PREFIX)
 
 
@@ -39,7 +39,7 @@ async def authorize_user(
 
 
 @router.get("/users/me")
-async def get_current_user(user: Annotated[User, Depends(auth.get_current_user)]) -> User:
+async def get_current_user(user: Annotated[User, Depends(auth.get_current_user)]) -> PartialUser:
     return user.dict(exclude={"id", "password"})
 
 
