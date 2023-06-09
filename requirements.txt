@@ -8,5 +8,6 @@ uvicorn
 python-multipart
 python-jose
 cryptography
-beanie
-motor
+beanie~=1.19.2
+motor~=3.1.2
+starlette~=0.27.0
