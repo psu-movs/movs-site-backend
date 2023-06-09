@@ -12,7 +12,7 @@ class MissingPermissions(HTTPException):
 class InvalidUserData(HTTPException):
     def __init__(self):
         super().__init__(
-            status_code=status.HTTP_401_UNAUTHORIZED,
+            status_code=status.HTTP_400_BAD_REQUEST,
             detail="Неправильное имя пользователя или пароль"
         )
 
