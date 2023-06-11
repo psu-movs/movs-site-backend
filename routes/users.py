@@ -66,4 +66,4 @@ async def get_user_by_id(user_id: str) -> PartialUser:
     user = await User.get(user_id)
     if (not user): return
 
-    return user.exclude({"password"})
+    return user.dict(exclude={"password"})
