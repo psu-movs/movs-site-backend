@@ -60,3 +60,10 @@ async def register(username: Annotated[str, Form()], email: Annotated[str, Form(
         "status": "success"
     }
 
+
+@router.get("/users/{user_id}")
+async def get_user_by_id(user_id: str) -> PartialUser:
+    user = await User.get(user_id)
+    if (not user): return
+
+    return user.exclude({"password"})
