@@ -6,7 +6,7 @@ from fastapi import APIRouter, Depends, Form, UploadFile
 from internal import auth
 from internal.error import MissingPermissions
 from internal.flags import Permissions
-from schemas import Article, User
+from schemas import Article, User, ArticleWithoutDescription
 
 from config import API_PREFIX
 from internal.cloud_storage import ImageKitCloudStorage
@@ -16,7 +16,7 @@ router = APIRouter(prefix=API_PREFIX)
 
 
 @router.get("/news")
-async def get_news() -> list[Article]:
+async def get_news() -> list[ArticleWithoutDescription]:
     articles = await Article.find_all().to_list()
     return [article.dict(exclude={"description"}) for article in articles]
 
