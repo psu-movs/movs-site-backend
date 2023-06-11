@@ -38,6 +38,7 @@ async def add_new_article(
 
     creation_date = datetime.datetime.now(datetime.timezone.utc).isoformat()
     article = Article(
+        author_id=user.id,
         title=title,
         description=description,
         creation_date=creation_date
