@@ -22,7 +22,7 @@ async def get_news() -> list[Article]:
 
 
 @router.get("/news/{article_id}")
-async def get_article(article_id: str):
+async def get_article(article_id: str) -> Article:
     return await Article.get(article_id)
 
 
@@ -77,16 +77,17 @@ async def edit_article(
     if description is not None:
         article.description = description
 
-    if article.thumbnail_file_id:
-        await ImageKitCloudStorage().delete_file(article.thumbnail_file_id)
+    if thumbnail is not None:
+        if article.thumbnail_file_id:
+            await ImageKitCloudStorage().delete_file(article.thumbnail_file_id)
 
-    result = await ImageKitCloudStorage().upload_file(
-        f"/department_head",
-        thumbnail.file,
-        str(article.id)
-    )
-    article.thumbnail_url = result["url"]
-    article.thumbnail_file_id = result["file_id"]
+        result = await ImageKitCloudStorage().upload_file(
+            f"/department_head",
+            thumbnail.file,
+            str(article.id)
+        )
+        article.thumbnail_url = result["url"]
+        article.thumbnail_file_id = result["file_id"]
 
     await article.save()
 
@@ -102,4 +103,5 @@ async def delete_article(
         raise MissingPermissions()
 
     article = await Article.get(article_id)
+    await ImageKitCloudStorage().delete_file(article.thumbnail_file_id)
     await article.delete()
