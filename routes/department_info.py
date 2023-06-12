@@ -122,7 +122,7 @@ async def update_department_head(
     if current_head is None:
         raise DepartmentHeadDoesNotExists()
 
-    data = {k: v for k, v in locals().items() if k not in {"photo", "user"} and v is not None}
+    data = {k: v for k, v in locals().items() if k not in {"photo", "user", "current_head"} and v is not None}
     for attr, value in data.items():
         setattr(current_head, attr, value)
 
