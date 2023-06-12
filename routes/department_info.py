@@ -109,10 +109,10 @@ async def add_department_head(
 @router.patch("/department/head")
 async def update_department_head(
     user: Annotated[User, Depends(auth.get_current_user)],
-    full_name: Annotated[str, Form()] | None = None,
-    phone: Annotated[str, Form()] | None = None,
-    email: Annotated[str, Form()] | None = None,
-    address: Annotated[str, Form()] | None = None,
+    full_name: str = Form(None),
+    phone: str = Form(None),
+    email: str = Form(None),
+    address: str = Form(None),
     photo: UploadFile | None = None,
 ) -> DepartmentHead:
     if not user.has_permissions(Permissions.MANAGE_INFO):

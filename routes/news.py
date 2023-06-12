@@ -63,8 +63,8 @@ async def add_new_article(
 async def edit_article(
     article_id: str,
     user: Annotated[User, Depends(auth.get_current_user)],
-    title: Annotated[str, Form()] | None = None,
-    description: Annotated[str, Form()] | None = None,
+    title: str = Form(None),
+    description: str = Form(None),
     thumbnail: UploadFile | None = None,
 ) -> Article:
     if not user.has_permissions(Permissions.MANAGE_NEWS):
