@@ -1,6 +1,6 @@
 from typing import Annotated
 
-from fastapi import APIRouter, HTTPException, status, Form, Depends
+from fastapi import APIRouter, HTTPException, status, Form, Depends, Response
 from fastapi.security import OAuth2PasswordRequestForm
 
 from internal import auth, error
@@ -25,6 +25,7 @@ async def authenticate_user(username: str, password: str):
 @router.post("/users/login")
 async def authorize_user(
     form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
+    response: Response
 ):
     user = await authenticate_user(form_data.username, form_data.password)
 
@@ -34,6 +35,8 @@ async def authorize_user(
     access_token = auth.create_access_token(
         data={"sub": user.email}
     )
+
+    response.set_cookie("token", access_token, secure=True, samesite="none")
 
     return {"access_token": access_token, "token_type": "bearer"}
 
