@@ -42,7 +42,7 @@ async def set_department_info(
 async def update_department_info(
     user: Annotated[User, Depends(auth.get_current_user)],
     partial_info: PartialDepartmentInfo
-) -> PartialDepartmentInfo:
+) -> DepartmentInfo:
     if not user.has_permissions(Permissions.MANAGE_INFO):
         raise MissingPermissions()
 
@@ -61,7 +61,7 @@ async def update_department_info(
 
     await department.save()
 
-    return department.dict(exclude={"head"})
+    return department
 
 
 @router.get("/department/head")
@@ -77,6 +77,7 @@ async def get_department_head() -> DepartmentHead:
 async def add_department_head(
     user: Annotated[User, Depends(auth.get_current_user)],
     full_name: Annotated[str, Form()],
+    post: Annotated[str, Form()],
     phone: Annotated[str, Form()],
     email: Annotated[str, Form()],
     address: Annotated[str, Form()],
@@ -110,6 +111,7 @@ async def add_department_head(
 async def update_department_head(
     user: Annotated[User, Depends(auth.get_current_user)],
     full_name: str = Form(None),
+    post: str = Form(None),
     phone: str = Form(None),
     email: str = Form(None),
     address: str = Form(None),

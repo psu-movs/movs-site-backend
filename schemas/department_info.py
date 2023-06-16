@@ -18,6 +18,7 @@ class Contacts(Document):
 
 class DepartmentHead(Contacts):
     full_name: str
+    post: str
     photo_url: str | None = None
     photo_file_id: str | None = None
 
