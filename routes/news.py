@@ -48,7 +48,7 @@ async def add_new_article(
     await article.create()
 
     result = await ImageKitCloudStorage().upload_file(
-        f"/department_head",
+        f"/articles",
         thumbnail.file,
         str(article.id)
     )
@@ -84,7 +84,7 @@ async def edit_article(
             await ImageKitCloudStorage().delete_file(article.thumbnail_file_id)
 
         result = await ImageKitCloudStorage().upload_file(
-            f"/department_head",
+            f"/articles",
             thumbnail.file,
             str(article.id)
         )
