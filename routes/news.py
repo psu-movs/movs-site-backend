@@ -41,6 +41,7 @@ async def add_new_article(
         author_id=str(user.id),
         title=title,
         description=description,
+        description_preview=description[0:50],
         creation_date=creation_date
     )
 
@@ -76,6 +77,7 @@ async def edit_article(
         article.title = title
     if description is not None:
         article.description = description
+        article.description_preview = description[0:50]
 
     if thumbnail is not None:
         if article.thumbnail_file_id:

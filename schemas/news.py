@@ -5,8 +5,9 @@ from pydantic import BaseModel
 class Article(Document):
     author_id: str
     title: str
-    description: str | None = None
     creation_date: str
+    description_preview: str
+    description: str | None = None
     thumbnail_url: str | None = None
     thumbnail_file_id: str | None = None
 
