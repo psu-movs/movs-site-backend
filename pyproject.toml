@@ -6,7 +6,7 @@ authors = ["Damego <damego.dev@gmail.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.11"
+python = "^3.10"
 fastapi = "^0.95.0"
 uvicorn = "^0.21.1"
 pydantic = {extras = ["email"], version = "^1.10.6"}
