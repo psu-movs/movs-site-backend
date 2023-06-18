@@ -16,8 +16,7 @@ router = APIRouter(prefix=API_PREFIX)
 
 @router.get("/science_works")
 async def get_science_works() -> list[ScienceWork]:
-    works = await ScienceWork.find_all().to_list()
-    return [work.dict(exclude={"description"}) for work in works[::-1]]
+    return await ScienceWork.find_all().to_list()
 
 
 @router.get("/science_works/{science_work_id}")
