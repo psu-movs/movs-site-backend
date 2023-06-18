@@ -36,8 +36,6 @@ async def authorize_user(
         data={"sub": user.email}
     )
 
-    response.set_cookie("token", access_token, secure=True, samesite="none")
-
     return {"access_token": access_token, "token_type": "bearer"}
 
 

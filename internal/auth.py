@@ -31,6 +31,7 @@ def create_access_token(data: dict):
 
 
 async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]) -> User:
+    print(token)
     try:
         decoded_token_data = jwt.decode(token, environ["OPENSSL_SECRET_KEY"], algorithms=[HASH_ALGORITH])
     except JWTError:
