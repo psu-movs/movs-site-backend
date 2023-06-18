@@ -18,7 +18,7 @@ router = APIRouter(prefix=API_PREFIX)
 @router.get("/news")
 async def get_news() -> list[Article]:
     articles = await Article.find_all().to_list()
-    return [article.dict(exclude={"description"}) for article in articles]
+    return [article.dict(exclude={"description"}) for article in articles[::-1]]
 
 
 @router.get("/news/{article_id}")
