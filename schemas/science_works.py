@@ -4,7 +4,7 @@ from pydantic import BaseModel
 
 class ScienceWork(Document):
     title: str
-    description: str | None = None
+    description: str
     image_url: str | None = None
     image_file_id: str | None = None
 

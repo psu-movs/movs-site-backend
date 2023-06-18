@@ -19,11 +19,6 @@ async def get_science_works() -> list[ScienceWork]:
     return await ScienceWork.find_all().to_list()
 
 
-@router.get("/science_works/{science_work_id}")
-async def get_science_work(science_work_id: str) -> ScienceWork:
-    return await ScienceWork.get(science_work_id)
-
-
 @router.post("/science_works")
 async def add_new_science_work(
     title: Annotated[str, Form()],
