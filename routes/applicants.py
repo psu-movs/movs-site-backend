@@ -15,7 +15,7 @@ router = APIRouter(prefix=API_PREFIX)
 
 
 @router.get("/applicants/companies")
-async def get_science_works() -> list[ApplicantsCompany]:
+async def get_companies() -> list[ApplicantsCompany]:
     return await ApplicantsCompany.find_all().to_list()
 
 
