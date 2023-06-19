@@ -30,6 +30,7 @@ async def get_article(article_id: str) -> Article:
 async def add_new_article(
     title: Annotated[str, Form()],
     description: Annotated[str, Form()],
+    description_preview: Annotated[str, Form()],
     thumbnail: UploadFile,
     user: Annotated[User, Depends(auth.get_current_user)],
 ) -> Article:
@@ -41,7 +42,7 @@ async def add_new_article(
         author_id=str(user.id),
         title=title,
         description=description,
-        description_preview=description[0:50],
+        description_preview=description_preview,
         creation_date=creation_date
     )
 
@@ -66,6 +67,7 @@ async def edit_article(
     user: Annotated[User, Depends(auth.get_current_user)],
     title: str = Form(None),
     description: str = Form(None),
+    description_preview: str = Form(None),
     thumbnail: UploadFile | None = None,
 ) -> Article:
     if not user.has_permissions(Permissions.MANAGE_NEWS):
@@ -77,7 +79,8 @@ async def edit_article(
         article.title = title
     if description is not None:
         article.description = description
-        article.description_preview = description[0:50]
+    if description_preview is not None:
+        article.description_preview = description_preview
 
     if thumbnail is not None:
         if article.thumbnail_file_id:
