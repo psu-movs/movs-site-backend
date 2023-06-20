@@ -25,31 +25,12 @@ class TextContentType(IntEnum):
     "Текст с изображением"
 
 
-class BaseContent(BaseModel):
+class Content(BaseModel):
     type: TextContentType
     "Тип контента"
-    meta: dict | None = None
+    meta: str | None = None
     "Дополнительная информация"
-
-
-class TextContent(BaseContent):
-    type: TextContentType = TextContentType.TEXT
-    content: str
+    content: str | None = None
     "Текст контента"
-
-
-class ImageContent(BaseContent):
-    type: TextContentType = TextContentType.IMAGE
-    image: Image
+    image: Image | None = None
     "Изображение"
-
-
-class TextContentWithImage(BaseContent):
-    type: TextContentType = TextContentType.TEXT_WITH_IMAGE
-    content: str
-    "Текст контента"
-    image: Image
-    "Изображение"
-
-
-
