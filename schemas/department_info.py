@@ -1,8 +1,6 @@
 from beanie import Document
 from pydantic import BaseModel
 
-from internal.models import Content
-
 
 class OptionalContacts(BaseModel):
     phone: str | None = None
@@ -24,8 +22,8 @@ class DepartmentHead(Contacts):
 
 
 class PartialDepartmentInfo(OptionalContacts):
-    description: list[Content] | None = None
+    description: str | None = None
 
 
 class DepartmentInfo(Contacts):
-    description: list[Content]
+    description: str
