@@ -81,6 +81,11 @@ async def delete_company(
     await company.delete()
 
 
+@router.get("/applicants/entry_info")
+async def get_entry_information() -> ApplicantsEntryInfo:
+    return await ApplicantsEntryInfo.find_one()
+
+
 @router.put("/applicants/entry_info")
 async def update_entry_information(
     info: ApplicantsEntryInfo, user: Annotated[User, Depends(auth.get_current_user)]
