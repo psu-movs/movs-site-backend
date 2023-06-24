@@ -12,7 +12,7 @@ class PartialUser(BaseModel):
 
 class User(Document):
     username: str
-    password: str
+    password: str | None = None
     email: str
     permissions: Permissions
 

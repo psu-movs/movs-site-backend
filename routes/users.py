@@ -5,6 +5,7 @@ from fastapi.security import OAuth2PasswordRequestForm
 
 from internal import auth, error
 from config import API_PREFIX
+from internal.error import MissingPermissions
 from internal.flags import Permissions
 
 from schemas.user import User, PartialUser
@@ -76,9 +77,29 @@ async def register(
 
 
 @router.get("/users/{user_id}")
-async def get_user_by_id(user_id: str) -> PartialUser:
+async def get_user_by_id(user_id: str) -> User | None:
     user = await User.get(user_id)
     if not user:
         return
 
     return user.dict(exclude={"password"})
+
+
+@router.patch("/users/{user_id}")
+async def update_user_permissions(
+    user_id: str,
+    permissions: int,
+    current_user: Annotated[User, Depends(auth.get_current_user)]
+):
+    if not current_user.has_permissions(Permissions.ADMINISTRATOR):
+        raise MissingPermissions()
+
+    user = await User.get(user_id)
+    user.permissions = permissions
+    await user.save()
+
+
+@router.get("/users")
+async def get_all_users() -> list[User]:
+    users = await User.find_all().to_list()
+    return [user.dict(exclude={"password"}) for user in users]
