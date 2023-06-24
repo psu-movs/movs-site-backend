@@ -20,4 +20,7 @@ class User(Document):
         name = "users"
 
     def has_permissions(self, permissions: Permissions) -> bool:
-        return permissions in self.permissions or Permissions.ADMINISTRATOR in self.permissions
+        return (
+            permissions in self.permissions
+            or Permissions.ADMINISTRATOR in self.permissions
+        )

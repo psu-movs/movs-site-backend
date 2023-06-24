@@ -13,4 +13,3 @@ class Article(Document):
 
     class Settings:
         name = "articles"
-

@@ -11,7 +11,7 @@ from internal.error import MissingPermissions
 router = APIRouter(prefix=API_PREFIX)
 
 
-@router.get('/teachers')
+@router.get("/teachers")
 async def get_list_teachers():
     return await Teacher.find_all().to_list()
 
@@ -41,9 +41,7 @@ async def add_teacher(
     await teacher.insert()
 
     result = await ImageKitCloudStorage().upload_file(
-        f"/teachers",
-        photo.file,
-        str(teacher.id)
+        f"/teachers", photo.file, str(teacher.id)
     )
 
     teacher.photo_url = result["url"]
@@ -52,7 +50,9 @@ async def add_teacher(
 
 
 @router.delete("/teachers/{teacher_id}")
-async def delete_teacher(teacher_id: str, user: Annotated[User, Depends(auth.get_current_user)]):
+async def delete_teacher(
+    teacher_id: str, user: Annotated[User, Depends(auth.get_current_user)]
+):
     if not user.has_permissions(Permissions.MANAGE_TEACHERS):
         raise MissingPermissions()
 
@@ -78,7 +78,11 @@ async def update_teacher(
     if not user.has_permissions(Permissions.MANAGE_TEACHERS):
         raise MissingPermissions()
 
-    payload: dict = {k: v for k, v in locals().items() if k not in {"teacher_id", "user", "photo"} and v is not None}
+    payload: dict = {
+        k: v
+        for k, v in locals().items()
+        if k not in {"teacher_id", "user", "photo"} and v is not None
+    }
     teacher = await Teacher.get(teacher_id)
 
     for key, value in payload.items():
@@ -87,12 +91,9 @@ async def update_teacher(
     if photo is not None:
         await ImageKitCloudStorage().delete_file(teacher.photo_file_id)
         result = await ImageKitCloudStorage().upload_file(
-            f"/teachers",
-            photo.file,
-            str(teacher.id)
+            f"/teachers", photo.file, str(teacher.id)
         )
         teacher.photo_url = result["url"]
         teacher.photo_file_id = result["file_id"]
 
     await teacher.save()
-

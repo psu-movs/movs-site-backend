@@ -26,14 +26,18 @@ def create_access_token(data: dict):
     expire = datetime.utcnow() + timedelta(days=7)
 
     to_encode.update({"exp": expire})
-    encoded_jwt = jwt.encode(to_encode, environ["OPENSSL_SECRET_KEY"], algorithm=HASH_ALGORITH)
+    encoded_jwt = jwt.encode(
+        to_encode, environ["OPENSSL_SECRET_KEY"], algorithm=HASH_ALGORITH
+    )
     return encoded_jwt
 
 
 async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]) -> User:
     print(token)
     try:
-        decoded_token_data = jwt.decode(token, environ["OPENSSL_SECRET_KEY"], algorithms=[HASH_ALGORITH])
+        decoded_token_data = jwt.decode(
+            token, environ["OPENSSL_SECRET_KEY"], algorithms=[HASH_ALGORITH]
+        )
     except JWTError:
         raise
 
@@ -44,4 +48,3 @@ async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]) -> Use
         raise
 
     return user
-

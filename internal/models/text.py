@@ -7,6 +7,7 @@ class Image(BaseModel):
     """
     Объект изображения
     """
+
     url: str
     "Ссылка на изображение"
     label: str
@@ -17,6 +18,7 @@ class TextContentType(IntEnum):
     """
     Типы контента
     """
+
     TEXT = 0
     "Только текст"
     IMAGE = 1

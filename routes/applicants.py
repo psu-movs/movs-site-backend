@@ -32,9 +32,7 @@ async def add_new_company(
     await company.create()
 
     result = await ImageKitCloudStorage().upload_file(
-        f"/applicants_companies",
-        image.file,
-        str(company.id)
+        f"/applicants_companies", image.file, str(company.id)
     )
     company.image_url = result["url"]
     company.image_file_id = result["file_id"]
@@ -60,9 +58,7 @@ async def edit_company(
             await ImageKitCloudStorage().delete_file(company.image_file_id)
 
         result = await ImageKitCloudStorage().upload_file(
-            f"/applicants_companies",
-            image.file,
-            str(company.id)
+            f"/applicants_companies", image.file, str(company.id)
         )
         company.image_url = result["url"]
         company.image_file_id = result["file_id"]

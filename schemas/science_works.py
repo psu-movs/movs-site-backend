@@ -10,4 +10,3 @@ class ScienceWork(Document):
 
     class Settings:
         name = "science_works"
-

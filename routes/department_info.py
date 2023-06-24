@@ -5,9 +5,13 @@ from fastapi import APIRouter, Depends, Form, UploadFile
 from config import API_PREFIX
 from internal import auth
 from internal.cloud_storage import ImageKitCloudStorage
-from internal.error import DepartmentHeadAlreadyExists, DepartmentInfoAlreadyExists, MissingPermissions, \
-    DepartmentInfoDoesNotExists, \
-    DepartmentHeadDoesNotExists
+from internal.error import (
+    DepartmentHeadAlreadyExists,
+    DepartmentInfoAlreadyExists,
+    MissingPermissions,
+    DepartmentInfoDoesNotExists,
+    DepartmentHeadDoesNotExists,
+)
 from internal.flags import Permissions
 from schemas import DepartmentInfo, User
 from schemas.department_info import DepartmentHead, PartialDepartmentInfo
@@ -41,7 +45,7 @@ async def set_department_info(
 @router.patch("/department")
 async def update_department_info(
     user: Annotated[User, Depends(auth.get_current_user)],
-    partial_info: PartialDepartmentInfo
+    partial_info: PartialDepartmentInfo,
 ) -> DepartmentInfo:
     if not user.has_permissions(Permissions.MANAGE_INFO):
         raise MissingPermissions()
@@ -89,15 +93,17 @@ async def add_department_head(
     if (await DepartmentHead.find_one()) is not None:
         raise DepartmentHeadAlreadyExists()
 
-    data = {k: v for k, v in locals().items() if k not in {"photo", "user"} and v is not None}
+    data = {
+        k: v
+        for k, v in locals().items()
+        if k not in {"photo", "user"} and v is not None
+    }
     head = DepartmentHead(**data)
 
     await head.create()
 
     result = await ImageKitCloudStorage().upload_file(
-        f"/department_head",
-        photo.file,
-        str(head.id)
+        f"/department_head", photo.file, str(head.id)
     )
     head.photo_url = result["url"]
     head.photo_file_id = result["file_id"]
@@ -124,7 +130,11 @@ async def update_department_head(
     if current_head is None:
         raise DepartmentHeadDoesNotExists()
 
-    data = {k: v for k, v in locals().items() if k not in {"photo", "user", "current_head"} and v is not None}
+    data = {
+        k: v
+        for k, v in locals().items()
+        if k not in {"photo", "user", "current_head"} and v is not None
+    }
     for attr, value in data.items():
         setattr(current_head, attr, value)
 
@@ -133,9 +143,7 @@ async def update_department_head(
             await ImageKitCloudStorage().delete_file(current_head.photo_file_id)
 
         result = await ImageKitCloudStorage().upload_file(
-            f"/department_head",
-            photo.file,
-            str(current_head.id)
+            f"/department_head", photo.file, str(current_head.id)
         )
         current_head.photo_url = result["url"]
         current_head.photo_file_id = result["file_id"]

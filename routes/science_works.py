@@ -37,9 +37,7 @@ async def add_new_science_work(
     await science_work.create()
 
     result = await ImageKitCloudStorage().upload_file(
-        f"/science_works",
-        image.file,
-        str(science_work.id)
+        f"/science_works", image.file, str(science_work.id)
     )
     science_work.image_url = result["url"]
     science_work.image_file_id = result["file_id"]
@@ -72,9 +70,7 @@ async def edit_science_work(
             await ImageKitCloudStorage().delete_file(science_work.image_file_id)
 
         result = await ImageKitCloudStorage().upload_file(
-            f"/science_works",
-            image.file,
-            str(science_work.id)
+            f"/science_works", image.file, str(science_work.id)
         )
         science_work.image_url = result["url"]
         science_work.image_file_id = result["file_id"]
