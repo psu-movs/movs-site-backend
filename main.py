@@ -14,6 +14,7 @@ from schemas import (
     Article,
     ScienceWork,
     ApplicantsCompany,
+    ApplicantsEntryInfo,
 )
 from routes import users, teachers, department_info, news, science_works, applicants
 
@@ -43,6 +44,7 @@ async def start():
             Article,
             ScienceWork,
             ApplicantsCompany,
+            ApplicantsEntryInfo,
         ],
     )
 

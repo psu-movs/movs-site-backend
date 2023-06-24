@@ -8,3 +8,7 @@ class ApplicantsCompany(Document):
     class Settings:
         name = "applicants_companies"
 
+
+class ApplicantsEntryInfo(Document):
+    entry_start_date_info: str
+    documents: str

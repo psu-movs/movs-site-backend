@@ -1,11 +1,11 @@
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, Form, UploadFile
+from fastapi import APIRouter, Depends, UploadFile
 
 from internal import auth
 from internal.error import MissingPermissions
 from internal.flags import Permissions
-from schemas import ApplicantsCompany, User
+from schemas import ApplicantsEntryInfo, ApplicantsCompany, User
 
 from config import API_PREFIX
 from internal.cloud_storage import ImageKitCloudStorage
@@ -79,3 +79,21 @@ async def delete_company(
     company = await ApplicantsCompany.get(company_id)
     await ImageKitCloudStorage().delete_file(company.image_file_id)
     await company.delete()
+
+
+@router.put("/applicants/entry_info")
+async def update_entry_information(
+    info: ApplicantsEntryInfo, user: Annotated[User, Depends(auth.get_current_user)]
+) -> ApplicantsEntryInfo:
+    if not user.has_permissions(Permissions.MANAGE_INFO):
+        raise MissingPermissions()
+
+    if current := await ApplicantsEntryInfo.find_one():
+        current.entry_start_date_info = info.entry_start_date_info
+        current.documents = info.documents
+
+        await current.save()
+        return current
+
+    await info.create()
+    return info
