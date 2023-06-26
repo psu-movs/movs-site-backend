@@ -18,6 +18,8 @@ passlib = {extras = ["bcrypt"], version = "^1.7.4"}
 imagekitio = "^3.0.1"
 beanie = "^1.19.2"
 motor = "^3.1.2"
+urllib3 = "1.26.16"
+aiohttp = "^3.8.4"
 
 
 [build-system]
