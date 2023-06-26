@@ -8,7 +8,6 @@ from starlette.middleware.cors import CORSMiddleware
 
 from schemas import (
     User,
-    Teacher,
     DepartmentHead,
     DepartmentInfo,
     Article,
@@ -38,7 +37,6 @@ async def start():
         database=db_client.movs,
         document_models=[
             User,
-            Teacher,
             DepartmentHead,
             DepartmentInfo,
             Article,

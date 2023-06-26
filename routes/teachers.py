@@ -1,99 +1,24 @@
-from typing import Annotated
-from fastapi import APIRouter, Depends, Form, UploadFile
+import aiohttp
+from fastapi import APIRouter
 
 from config import API_PREFIX
-from internal import auth
-from internal.flags import Permissions
-from schemas import Teacher, User
-from internal.cloud_storage import ImageKitCloudStorage
-from internal.error import MissingPermissions
 
 router = APIRouter(prefix=API_PREFIX)
+session: aiohttp.ClientSession | None = None
+TEACHERS_URL = "https://helios.psu.ru/pls/www_psu_ru/teacher_list?p_sdiv_name=%CA%E0%F4%E5%E4%F0%E0%EC%E0%F2%E5%EC%E0%F2%E8%F7%E5%F1%EA%EE%E3%EE%EE%E1%E5%F1%EF%E5%F7%E5%ED%E8%FF%E2%FB%F7%E8%F1%EB%E8%F2%E5%EB%FC%ED%FB%F5%F1%E8%F1%F2%E5%EC"
+
+async def get_session():
+    global session
+    if session is None or session.closed:
+        session = aiohttp.ClientSession()
+    return session
 
 
 @router.get("/teachers")
-async def get_list_teachers():
-    return await Teacher.find_all().to_list()
-
-
-@router.post("/teachers")
-async def add_teacher(
-    user: Annotated[User, Depends(auth.get_current_user)],
-    first_name: Annotated[str, Form()],
-    last_name: Annotated[str, Form()],
-    post: Annotated[str, Form()],
-    disciplines: Annotated[list[str], Form()],
-    photo: UploadFile,
-    surname: Annotated[str, Form()] | None = None,
-    academic_degree: Annotated[str, Form()] | None = None,
-):
-    if not user.has_permissions(Permissions.MANAGE_TEACHERS):
-        raise MissingPermissions()
-
-    teacher = Teacher(
-        first_name=first_name,
-        last_name=last_name,
-        surname=surname,
-        post=post,
-        disciplines=disciplines,
-        academic_degree=academic_degree,
-    )
-    await teacher.insert()
-
-    result = await ImageKitCloudStorage().upload_file(
-        f"/teachers", photo.file, str(teacher.id)
-    )
-
-    teacher.photo_url = result["url"]
-    teacher.photo_file_id = result["file_id"]
-    await teacher.save()
-
-
-@router.delete("/teachers/{teacher_id}")
-async def delete_teacher(
-    teacher_id: str, user: Annotated[User, Depends(auth.get_current_user)]
-):
-    if not user.has_permissions(Permissions.MANAGE_TEACHERS):
-        raise MissingPermissions()
-
-    print(teacher_id)
-    teacher = await Teacher.get(teacher_id)
-
-    await ImageKitCloudStorage().delete_file(teacher.photo_file_id)
-    await teacher.delete()
-
-
-@router.patch("/teachers/{teacher_id}")
-async def update_teacher(
-    teacher_id: str,
-    user: Annotated[User, Depends(auth.get_current_user)],
-    first_name: Annotated[str, Form()] | None = None,
-    last_name: Annotated[str, Form()] | None = None,
-    post: Annotated[str, Form()] | None = None,
-    disciplines: Annotated[list[str], Form()] | None = None,
-    photo: UploadFile | None = None,
-    surname: Annotated[str, Form()] | None = None,
-    academic_degree: Annotated[str, Form()] | None = None,
-):
-    if not user.has_permissions(Permissions.MANAGE_TEACHERS):
-        raise MissingPermissions()
-
-    payload: dict = {
-        k: v
-        for k, v in locals().items()
-        if k not in {"teacher_id", "user", "photo"} and v is not None
-    }
-    teacher = await Teacher.get(teacher_id)
-
-    for key, value in payload.items():
-        setattr(teacher, key, value)
-
-    if photo is not None:
-        await ImageKitCloudStorage().delete_file(teacher.photo_file_id)
-        result = await ImageKitCloudStorage().upload_file(
-            f"/teachers", photo.file, str(teacher.id)
-        )
-        teacher.photo_url = result["url"]
-        teacher.photo_file_id = result["file_id"]
-
-    await teacher.save()
+async def get_list_teachers() -> str:
+    # Единственный метод, который возвращает строку и не взаимодействует с бд
+    # Изначально это должно было быть во фронте,
+    # но спасибо кодировке win1251, которая превращает кириллицу в знаки вопроса
+    session = await get_session()
+    async with session.get(TEACHERS_URL) as res:
+        return await res.text()
